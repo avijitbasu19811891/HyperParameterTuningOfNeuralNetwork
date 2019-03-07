@@ -12,23 +12,10 @@ sample_history = 10
 GlobalDataSet = []
 from Params import DataSetFilePath
 
-def FillPartialDataSet():
-    GlobalDataSet = []
-    for fileIdx in range(100):
-        fileName = DataSetFilePath + str(fileIdx)+".csv"
-        print(fileName)
-        if fileIdx > 0:
-           GlobalDataSet.append(fileName)
-    print(GlobalDataSet)
-
-def FillFullDataSet():
-    GlobalDataSet = []
-    path = DataSetFilePath + "*.csv"
-    for fname in glob.glob(path):
-        GlobalDataSet.append(fname)
+from Params import LoadPartial
+from Params import NumOfFileToLoad
 
 def load_data():
-    FillPartialDataSet()
     path = "./ml_data/*.csv"
     file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
                  "./ml_data/5.csv", "./ml_data/6.csv"]
@@ -37,8 +24,8 @@ def load_data():
 
     print("loading data...")
 
-    #for fname in glob.glob(path):
-    for fname in file_name:
+    idx = 0
+    for fname in glob.glob(path):
         print (fname)
         with open(fname, 'r') as infh:
             reader = csv.reader(infh, delimiter=';')
@@ -51,6 +38,10 @@ def load_data():
                 # print(rr)
                 data.append(rr)
                 labels.append(r[-1])
+        if LoadPartial is not None:
+            if idx > NumOfFileToLoad:
+                break
+        idx +=1
 
     data = np.array(data)
     labels = np.array(labels)

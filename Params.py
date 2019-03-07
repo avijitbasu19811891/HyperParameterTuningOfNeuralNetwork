@@ -15,20 +15,6 @@ Population = 20  # Number of networks in each generation.
 TopBreedPercent = 15
 FitnessPopulationPercent = 70
 DataSetFilePath = "./ml_data/"
-"""
-GlobalDataSet = []
-def FillPartialDataSet():
-    GlobalDataSet = []
-    for fileIdx in range(100):
-        fileName = DataSetFilePath + str(fileIdx)+".csv"
-        print(fileName)
-        GlobalDataSet.append(fileName)
-    print(GlobalDataSet)
 
-def FillFullDataSet():
-    GlobalDataSet = []
-    path = DataSetFilePath + "*.csv"
-    for fname in glob.glob(path):
-        GlobalDataSet.append(fname)
-"""
-
+LoadPartial=1
+NumOfFileToLoad = 500
