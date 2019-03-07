@@ -11,17 +11,27 @@ from Algo          import TrainWithMutation   as trainWithEvolution
 
 #from tqdm import tqdm
 
+from Params import LogFileName
+from Params import ResultFileName
+from Params import UpdateAllLogsToFile
+import sys
+fLog = open(LogFileName, 'w')
+fResult = open(ResultFileName, "w")
+
 def main():
     """Evolve a network."""
     generations = 10  # Number of times to evole the population.
     population = 20  # Number of networks in each generation.
+
+    if UpdateAllLogsToFile is not None:
+       sys.stdout = fLog
 
     print("Initializing with population:"+str(populationCount))
 
     db1 = NNDb(population, randomFn, nnParams)
 
     db1.createPopulation()
-    print("Generated population:")
+    print("Generated population:", fResult)
 
     pop = db1.population()
 
@@ -39,6 +49,8 @@ def main():
     """
 
     traninedAndEvolvedNNSet = trainWithEvolution(db1)
+    fLog.close()
+    fResult.close()
 
 if __name__ == '__main__':
     main()

@@ -18,3 +18,6 @@ DataSetFilePath = "../ml_data/*.csv"
 
 LoadPartial=1
 NumOfFileToLoad = 500
+LogFileName = "../log_test.txt"
+ResultFileName = "../result_file.txt"
+UpdateAllLogsToFile = None

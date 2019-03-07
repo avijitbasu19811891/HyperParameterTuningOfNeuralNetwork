@@ -98,6 +98,8 @@ from keras.layers import Dense, Activation
 from keras.callbacks import EarlyStopping
 import keras
 
+from keras import layers, initializers
+
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
     print(train_data.shape[1])
@@ -114,9 +116,13 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
         # Need input shape for first layer.
         if i == 0:
-            model.add(Dense(nb_neurons, activation='linear', input_shape=(train_data.shape[1],)))
+            model.add(Dense(nb_neurons, activation='linear', input_shape=(train_data.shape[1],),
+                            kernel_initializer='random_uniform',
+                            bias_initializer=initializers.Constant(0.1)))
         else:
-            model.add(Dense(nb_neurons, activation=activation))
+            model.add(Dense(nb_neurons, activation=activation,
+                            kernel_initializer='random_uniform',
+                            bias_initializer=initializers.Constant(0.1)))
 
 
 
