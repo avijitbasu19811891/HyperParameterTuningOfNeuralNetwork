@@ -44,7 +44,7 @@ def EvaluatePopulationFitness(population, fitnessFn):
 
 from NNTraining   import TrainAndScore as trainNN
 from Algo          import  TriggerTraining as trainAndEstimate
-from GenticOnNNPopulation import TriggerNNEvolution as evolve
+
 from GenticOnNNPopulation import Generation
 
 """
