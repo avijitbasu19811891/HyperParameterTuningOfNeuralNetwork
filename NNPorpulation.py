@@ -31,10 +31,14 @@ class NeuralNetwork:
                 self._network[key] = random.choice(self._nn_param_choices[key])
         else:
             self._network = nnParams
+        self._weight = []
 
     def updateAccuracy(self, accuracy):
         print("Updating accuracy")
         self._accuracy = accuracy
+
+    def updateWeight(self, weight):
+        self._weight = weight
 
     """
        Update entire set of neural parameters.
@@ -51,9 +55,16 @@ class NeuralNetwork:
     def accuracy(self):
         return self._accuracy
 
-    def describe(self):
-        print(self._network)
-        print("Accuracy:"+str(self._accuracy))
+    def describe(self, detailed = False, fileId=None):
+        if fileId is None:
+           print(self._network)
+           print("Accuracy:"+str(self._accuracy))
+           if detailed is True:
+              print("Weight:")
+              print(self._weight)
+        else:
+            print(self._network,fileId)
+            print("Accuracy:"+str(self._accuracy),fileId)
 
 class NNDb:
     def __init__(self, population, randomFn, nn_param_choices=None):

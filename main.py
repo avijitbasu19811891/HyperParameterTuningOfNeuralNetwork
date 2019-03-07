@@ -9,6 +9,7 @@ from Algo          import TrainWithoutMutation as trainAndChooseTopAccuracy
 
 from Algo          import TrainWithMutation   as trainWithEvolution
 
+from Params        import involveMutation
 #from tqdm import tqdm
 
 from Params import LogFileName
@@ -16,7 +17,7 @@ from Params import ResultFileName
 from Params import UpdateAllLogsToFile
 import sys
 fLog = open(LogFileName, 'w')
-fResult = open(ResultFileName, "w")
+
 
 def main():
     """Evolve a network."""
@@ -31,7 +32,7 @@ def main():
     db1 = NNDb(population, randomFn, nnParams)
 
     db1.createPopulation()
-    print("Generated population:", fResult)
+    print("Generated population:")
 
     pop = db1.population()
 
@@ -42,15 +43,19 @@ def main():
     """
        Train network based on Neural Algorithms
     """
-    #trainedNNSet = trainAndChooseTopAccuracy(db1)
+    trainedNNSet = []
+    if involveMutation is not True:
+       trainedNNSet = trainAndChooseTopAccuracy(db1)
+    else:
+       """
+          Train network and then Evolve the population
+       """
+       trainedNNSet = trainWithEvolution(db1)
 
-    """
-       Train network and then Evolve the population
-    """
-
-    traninedAndEvolvedNNSet = trainWithEvolution(db1)
+    for nn in trainedNNSet:
+        nn.describe()
     fLog.close()
-    fResult.close()
+
 
 if __name__ == '__main__':
     main()

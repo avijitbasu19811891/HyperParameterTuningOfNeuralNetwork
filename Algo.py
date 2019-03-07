@@ -92,6 +92,11 @@ def TrainGeneration(population, dataSet=None):
            evlove this poluation set
         """
         evolvedPopulation = evolve(population, fitness)
+
+        print("Fittest population after this round of training:")
+        for nn in evolvedPopulation:
+            nn.describe()
+
         idx += 1
         """
            Train this set of neural networks
@@ -103,7 +108,16 @@ def TrainGeneration(population, dataSet=None):
            <TBD> We need to make sure, that this evolvedPopulation is
            better than earlier populaiton
         """
-    return evolvedPopulation
+    """
+       We have finished training for population
+       Perform the final sorting
+    """
+    sortedNN = [(fitness(nn), nn) for nn in evolvedPopulation]
+
+    sortedNN = [x[1] for x in sorted(sortedNN, key=lambda x: x[0], reverse=True)]
+    print("Sorted on Accuracy")
+
+    return sortedNN
 
 from Algo import TrainGeneration as generationFn
 

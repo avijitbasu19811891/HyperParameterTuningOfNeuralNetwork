@@ -17,7 +17,16 @@ FitnessPopulationPercent = 70
 DataSetFilePath = "../ml_data/*.csv"
 
 LoadPartial=1
-NumOfFileToLoad = 500
+NumOfFileToLoad = 50
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
-UpdateAllLogsToFile = None
+UpdateAllLogsToFile = 1
+WeightFileName = "../weightFile.txt"
+
+involveMutation = False
+'''
+Keras params
+'''
+EpochCount = 150
+isKegarVerbose = False
+

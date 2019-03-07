@@ -96,10 +96,19 @@ def arnn(nn, train_data, train_labels):
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.callbacks import EarlyStopping
+from keras.callbacks import ModelCheckpoint
+from Params import WeightFileName
 import keras
 
 from keras import layers, initializers
 
+from Params import ResultFileName
+
+from Params import isKegarVerbose
+
+import sys
+
+fResult = open(ResultFileName, "w")
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
     print(train_data.shape[1])
@@ -145,12 +154,16 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     model.fit(train_data, train_labels,
               batch_size=10,
               epochs=150,  # using early stopping, so no real limit
-              verbose=1,
+              verbose=isKegarVerbose,
               validation_data=(test_data, test_labels),
-              callbacks=[EarlyStopping(patience=5)])
+              callbacks=[ModelCheckpoint(WeightFileName, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=True, mode='auto', period=1),
+                  EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto', baseline=None, restore_best_weights=False),])
 
+    weight = model.get_weights()
+    #print(weight)
     print("End of  training")
-    score = model.evaluate(test_data, test_labels, verbose=1)
+    nn.updateWeight(weight)
+    score = model.evaluate(test_data, test_labels, verbose=isKegarVerbose)
 
     print(score)
     return score[1]  # 1 is accuracy. 0 is loss.
