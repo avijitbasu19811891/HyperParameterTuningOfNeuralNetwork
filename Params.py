@@ -14,7 +14,7 @@ Generations = 2  # Number of times to evole the population.
 Population = 20  # Number of networks in each generation.
 TopBreedPercent = 15
 FitnessPopulationPercent = 70
-DataSetFilePath = "./ml_data/"
+DataSetFilePath = "../ml_data/*.csv"
 
 LoadPartial=1
 NumOfFileToLoad = 500

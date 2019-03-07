@@ -10,13 +10,12 @@ import numpy as np
 sample_history = 10
 
 GlobalDataSet = []
-from Params import DataSetFilePath
+from Params import DataSetFilePath as path
 
 from Params import LoadPartial
 from Params import NumOfFileToLoad
 
 def load_data():
-    path = "./ml_data/*.csv"
     file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
                  "./ml_data/5.csv", "./ml_data/6.csv"]
     data = []
