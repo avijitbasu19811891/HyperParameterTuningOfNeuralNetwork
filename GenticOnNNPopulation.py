@@ -43,53 +43,6 @@ def BreedChild(fittestSet, maxNumChild):
          fittestSet.append(childNN)
 
 
-def TriggerNNEvolution(population, fitnessFn, breedFn=None, mutationFn=None):
-   """
-   Sort based on accuracy the first  5% of the population
-   """
-   numNNToChoose = int((float(populationCount) * fitnessPercent) / 100)
-
-   maxChildPercent = fitnessPercent + 10
-   if (maxChildPercent > 100 ):
-      maxChildPercent = 90
-
-   maxChild = int((float(populationCount) * maxChildPercent) / 100)
-   print("Evolving population len:"+str(len(population)))
-   print("Choose top:" + str(numNNToChoose)+" as parent")
-   print("MaxChild:"+str(maxChild))
-
-   print("Evolving Db")
-   gradedNN = [(fitnessFn(nn), nn) for nn in population]
-
-   gradedNN = [x[1] for x in sorted(gradedNN, key=lambda x: x[0], reverse=True)]
-   print("Sorted on Accuracy")
-   print(gradedNN)
-
-   fittestNNPopulation = gradedNN[:numNNToChoose]
-   fittestNNPopulation[1].describe()
-   print("Describing top NN")
-   for idx in range(0, len(fittestNNPopulation) - 1):
-      fittestNNPopulation[idx].describe()
-
-   """
-   Add a few of the least fittest to the list
-   """
-   """
-   for nn in gradedNN[numNNToChoose:]:
-      if 5 > random.random():
-         fittestNNPopulation.append(nn)
-   """
-   if breedFn is not None:
-      breedFn(fittestNNPopulation, maxChild)
-   else :
-      BreedChild(fittestNNPopulation,maxChild)
-
-   """
-      Mutate a few child
-   """
-   return fittestNNPopulation
-
-
 
 """
 Mutate a particular NN
@@ -104,4 +57,74 @@ def MutateNN(nn):
    nn.updateParams(mutation, mutatedParam)
    print("After Mutation")
    nn.describe()
+
+class Generation:
+   _population = []
+   _fitnessFn = None
+   _fitnessLevel = None
+   def __init__(self, population, fitnessFn):
+      if population is not None:
+         self._population = population
+      self._fitnessFn = fitnessFn
+
+   def fitness(self):
+      fitnessLevel = 0
+      count = 0
+      for nn in self._population:
+         fitnessLevel = fitnessLevel + self._fitnessFn(nn)
+         count = count + 1
+      self._fitnessLevel = fitnessLevel % count
+
+   def evolve(self, breedFn=None, mutationFn=None):
+      """
+      Sort based on accuracy the first  5% of the population
+      """
+      numNNToChoose = int((float(populationCount) * fitnessPercent) / 100)
+
+      maxChildPercent = fitnessPercent + 10
+      if (maxChildPercent > 100):
+         maxChildPercent = 90
+
+      maxChild = int((float(populationCount) * maxChildPercent) / 100)
+      print("Evolving population len:" + str(len(self._population)))
+      print("Choose top:" + str(numNNToChoose) + " as parent")
+      print("MaxChild:" + str(maxChild))
+
+      print("Evolving Db")
+      gradedNN = [(self._fitnessFn(nn), nn) for nn in self._population]
+
+      gradedNN = [x[1] for x in sorted(gradedNN, key=lambda x: x[0], reverse=True)]
+      print("Sorted on Accuracy")
+      print(gradedNN)
+
+      fittestNNPopulation = gradedNN[:numNNToChoose]
+      fittestNNPopulation[1].describe()
+      print("Describing top NN")
+      for idx in range(0, len(fittestNNPopulation) - 1):
+         fittestNNPopulation[idx].describe()
+
+      """
+      Add a few of the least fittest to the list
+      """
+      """
+      for nn in gradedNN[numNNToChoose:]:
+         if 5 > random.random():
+            fittestNNPopulation.append(nn)
+      """
+      if breedFn is not None:
+         breedFn(fittestNNPopulation, maxChild)
+      else:
+         BreedChild(fittestNNPopulation, maxChild)
+
+      """
+         Mutate a few child
+      """
+      return fittestNNPopulation
+
+   def train(self,trainFn):
+      for nn in self._population:
+         trainFn(nn)
+
+
+
 

@@ -8,7 +8,7 @@ from NNPorpulation import NNDb
 from Params        import GlobalNNParamChoices as nnParams
 from Params        import RandomChoiceFn as randomFn
 from NNTraining   import TrainAndScore as trainNN
-from GenticOnNNPopulation import TriggerNNEvolution as evolve
+
 from Params        import Population     as populationCount
 from Params        import Generations    as generationCount
 from Params        import TopBreedPercent as topPercent
@@ -34,13 +34,22 @@ def TriggerTraining(nn, trainingfn=None):
     print("Triggering training for network:")
     trainNN(nn, train_data, train_labels, test_data, test_labels)
 
+def EvaluatePopulationFitness(population, fitnessFn):
+   count = 0
+   fitness = 0
+   for nn in population:
+      fitness = fitness + fitnessFn(nn)
+      count = count +1
+   return (fitness/count)
 
 from NNTraining   import TrainAndScore as trainNN
 from Algo          import  TriggerTraining as trainAndEstimate
 from GenticOnNNPopulation import TriggerNNEvolution as evolve
+from GenticOnNNPopulation import Generation
 
 """
 This is the algorithm that trains and chooses top few NN 
+This is an alternate to the Mutation based evolve
 """
 def TrainWithoutMutation(db, dataSet=None):
     trainingTrigger = lambda nn: trainAndEstimate(nn)
@@ -80,18 +89,23 @@ def TrainWithoutMutation(db, dataSet=None):
    Then after each evolution, train the population of evolved NN
 """
 def TrainGeneration(population, dataSet=None):
+
     trainPopulation = lambda nn: trainAndEstimate(nn)
 
     fitness = lambda nn: nn.accuracy()
+    generation = Generation(population, fitness)
+    fitnessArray = []
 
     """
        Run though each generation of population set
     """
     for idx in range(1, generationCount):
         """
-           evlove this poluation set
+           evolve this poluation set
         """
-        evolvedPopulation = evolve(population, fitness)
+        #evolvedPopulation = evolve(population, fitness)
+        evolvedPopulation  = generation.evolve()
+        fitnessArray.append(generation.fitness())
 
         print("Fittest population after this round of training:")
         for nn in evolvedPopulation:
@@ -101,13 +115,21 @@ def TrainGeneration(population, dataSet=None):
         """
            Train this set of neural networks
         """
+        generation.train(trainPopulation)
+        """
         for nn in evolvedPopulation:
             trainPopulation(nn)
+        """
 
+        """
+           Create the next generation
+        """
+        generation = Generation(evolvedPopulation, fitness)
         """
            <TBD> We need to make sure, that this evolvedPopulation is
            better than earlier populaiton
         """
+
     """
        We have finished training for population
        Perform the final sorting
@@ -117,6 +139,7 @@ def TrainGeneration(population, dataSet=None):
     sortedNN = [x[1] for x in sorted(sortedNN, key=lambda x: x[0], reverse=True)]
     print("Sorted on Accuracy")
 
+    print(fitnessArray)
     return sortedNN
 
 from Algo import TrainGeneration as generationFn

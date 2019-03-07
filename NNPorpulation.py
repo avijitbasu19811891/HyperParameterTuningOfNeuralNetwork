@@ -31,7 +31,9 @@ class NeuralNetwork:
                 self._network[key] = random.choice(self._nn_param_choices[key])
         else:
             self._network = nnParams
+
         self._weight = []
+        self._trainingModel = None
 
     def updateAccuracy(self, accuracy):
         print("Updating accuracy")
@@ -39,6 +41,8 @@ class NeuralNetwork:
 
     def updateWeight(self, weight):
         self._weight = weight
+    def updateModel(selfself, model):
+        self._trainingModel = model
 
     """
        Update entire set of neural parameters.
@@ -100,7 +104,7 @@ class NNDb:
         print(self._paramChoice)
         print("NumNN:"+str(self._numNN))
         for nn in self._set:
-            nn.describe
+            nn.describe()
 
 
 if int((tf.__version__).split('.')[1]) < 12:
