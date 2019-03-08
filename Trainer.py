@@ -118,8 +118,13 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     activation = nn._network['activation']
     optimizer = nn._network['optimizer']
 
+    """
+    if reTrainExistingNetworks == False:
+        if nn.isTrained() == True:
+    """
+
     model = Sequential()
-    print(train_data.shape[1])
+
     # Add each layer.
     for i in range(nb_layers):
 

@@ -40,10 +40,15 @@ FitnessPopulationPercent = 70
 DataSetFilePath = "../ml_data/*.csv"
 
 """
+   If to removve Outliers
+"""
+RemoveOutlier = True
+
+"""
    For testing purpose, we can choose to load a partial set of data
 """
 LoadPartial=1
-NumOfFileToLoad = 50
+NumOfFileToLoad = 500
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1
@@ -53,7 +58,7 @@ WeightFileName = "../weightFile.txt"
    Choose to train networks and then evolve them
    Or to train a single generation of neurons
 """
-involveMutation = False
+involveMutation = True
 
 """
    When we choose the mutation based approach,
