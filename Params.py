@@ -1,18 +1,31 @@
 GlobalNNParamChoices = {
-    'nb_neurons': [64, 128, 256, 512],
-    'nb_layers': [1, 2, 3, 5, 7],
+    'nb_neurons': [256, 512, 1024],
+    'nb_layers': [1, 2, 3],
     'activation': ['relu', 'elu', 'tanh', 'sigmoid'],
     'optimizer': ['rmsprop', 'adam', 'sgd', 'adagrad',
                   'adadelta', 'adamax', 'nadam'],
 }
 
+GlobalWeightOfChoices = {
+    'nb_neurons': [0.175, 0.425, 0.3],
+    'nb_layers': [0.4, 0.3, 0.3],
+    'activation': [0.4, 0.39, 0, 0.2],
+    'optimizer': [0.14, 0.14, 0.14, 0.14,
+                  0.14, 0.14, 0.14],
+}
 def RandomChoiceFn (key, paramsChoice):
-    return random.choice(paramsChoice[key])
+    return random.choice(paramsChoice[key],size = 1,p=GlobalWeightOfChoices[key])
+
+
+GlobalKnonwParams = [
+   {'nb_layers': 1, 'activation': 'tanh', 'optimizer': 'adamax', 'nb_neurons': 512},
+   {'nb_layers': 2, 'activation': 'relu', 'optimizer': 'nadam', 'nb_neurons': 512}
+]
 
 # Number of times to evolve the population.
 Generations = 3
 # Number of networks in population
-Population = 20
+Population = 20 + len(GlobalKnonwParams)
 
 """
 From each generation choose the top

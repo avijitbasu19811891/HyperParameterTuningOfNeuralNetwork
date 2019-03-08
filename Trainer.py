@@ -125,7 +125,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
         # Need input shape for first layer.
         if i == 0:
-            model.add(Dense(nb_neurons, activation='linear', input_shape=(train_data.shape[1],),
+            model.add(Dense(nb_neurons, activation='relu', input_shape=(train_data.shape[1],),
                             kernel_initializer='random_uniform',
                             bias_initializer=initializers.Constant(0.1)))
         else:
@@ -136,7 +136,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
 
     # Output layer.
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(1, activation=None))
 
     model.compile(loss='binary_crossentropy', optimizer=optimizer,
                   metrics=['accuracy'])

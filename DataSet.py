@@ -14,6 +14,17 @@ from Params import DataSetFilePath as path
 
 from Params import LoadPartial
 from Params import NumOfFileToLoad
+#import seaborn as sns
+#from scipy import stats
+#import numpy as np
+
+def drawOutliner(data):
+    return
+"""
+    z = np.abs(stats.zscore(data))
+    print(z)
+    # idx in range(data.shape[1]):
+"""
 
 def load_data():
     file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
@@ -53,5 +64,6 @@ def load_data():
 
     print(train_data)
     print(train_labels)
+    drawOutliner(test_data)
     return train_data, train_labels, test_data, test_labels
 

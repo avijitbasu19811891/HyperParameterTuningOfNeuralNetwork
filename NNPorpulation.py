@@ -84,6 +84,13 @@ class NNDb:
         self._set.append(nn)
         self._numNN += 1
 
+    def addEntryWithChoosenParam(self, params):
+        print("Adding known networks")
+        print(params)
+        nn = NeuralNetwork(params, None)
+        self._set.append(nn)
+        self._numNN += 1
+
     def createPopulation(self):
         for idx in range(1 , self._population):
             self.addEntry()

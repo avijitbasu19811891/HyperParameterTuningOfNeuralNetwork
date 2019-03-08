@@ -18,7 +18,7 @@ from Params import UpdateAllLogsToFile
 import sys
 fLog = open(LogFileName, 'w')
 
-
+from Params import GlobalKnonwParams
 def main():
     """Evolve a network."""
     generations = 10  # Number of times to evole the population.
@@ -29,10 +29,16 @@ def main():
 
     print("Initializing with population:"+str(populationCount))
 
-    db1 = NNDb(population, randomFn, nnParams)
+    db1 = NNDb(population - len(GlobalKnonwParams), randomFn, nnParams)
+
+    for elem in GlobalKnonwParams:
+        print("Adding with known params")
+        db1.addEntryWithChoosenParam(elem)
 
     db1.createPopulation()
     print("Generated population:")
+
+
 
     pop = db1.population()
 
