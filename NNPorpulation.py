@@ -39,8 +39,18 @@ class NeuralNetwork:
         print("Updating accuracy")
         self._accuracy = accuracy
 
+    def accuracy(self):
+        return self._accuracy
+
     def updateWeight(self, weight):
         self._weight = weight
+
+    def isWeightSet(self):
+        return len(self._weight)
+
+    def getWeight(self):
+        return self._weight
+
     def updateModel(selfself, model):
         self._trainingModel = model
 

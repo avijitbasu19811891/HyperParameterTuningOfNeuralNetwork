@@ -19,11 +19,13 @@ def RandomChoiceFn (key, paramsChoice):
 
 GlobalKnonwParams = [
    {'nb_layers': 1, 'activation': 'tanh', 'optimizer': 'adamax', 'nb_neurons': 512},
-   {'nb_layers': 2, 'activation': 'relu', 'optimizer': 'nadam', 'nb_neurons': 512}
+   {'nb_layers': 2, 'activation': 'relu', 'optimizer': 'nadam', 'nb_neurons': 512},
+   {'nb_layers': 1, 'activation': 'elu', 'optimizer': 'adagrad', 'nb_neurons': 256}
+   {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 1024}
 ]
 
 # Number of times to evolve the population.
-Generations = 3
+Generations = 5
 # Number of networks in population
 Population = 20 + len(GlobalKnonwParams)
 
@@ -48,7 +50,7 @@ RemoveOutlier = True
    For testing purpose, we can choose to load a partial set of data
 """
 LoadPartial=1
-NumOfFileToLoad = 500
+NumOfFileToLoad = 50
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1
@@ -58,16 +60,18 @@ WeightFileName = "../weightFile.txt"
    Choose to train networks and then evolve them
    Or to train a single generation of neurons
 """
-involveMutation = True
+involveMutation = False
 
 """
    When we choose the mutation based approach,
    then we can choose, if we shall retrain a network, which is already trained.
 """
-reTrainExistingNetworks = True
+reTrainExistingNetworks = False
 '''
 Keras params
 '''
 EpochCount = 150
 isKegarVerbose = False
+
+EnableKegarDebug = True
 

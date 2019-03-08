@@ -97,6 +97,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
+from keras.callbacks import TensorBoard
+
 from Params import WeightFileName
 import keras
 
@@ -106,9 +108,15 @@ from Params import ResultFileName
 
 from Params import isKegarVerbose
 
+from Params import EnableKegarDebug
 import sys
 
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 fResult = open(ResultFileName, "w")
+
+
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
     print(train_data.shape[1])
@@ -138,6 +146,9 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
                             kernel_initializer='random_uniform',
                             bias_initializer=initializers.Constant(0.1)))
 
+    if nn.isWeightSet() != 0:
+        print("Reusing old weights:")
+        model.set_weights(nn.getWeight())
 
 
     # Output layer.
@@ -155,22 +166,66 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         labels.append(l)
     labels = np.array(labels)
 
+    class LossHistory(keras.callbacks.Callback):
+        def on_train_begin(self, logs={}):
+            self.losses = []
+            self.weights = []
+            self.n = 0
+            self.n += 1
+
+        def on_epoch_end(self, batch, logs={}):
+            self.losses.append(logs.get('loss'))
+            w = model.get_weights()
+            self.weights.append([x.flatten()[0] for x in w])
+            self.n += 1
+
+    callbackList = []
+    callbackList.append(ModelCheckpoint(WeightFileName, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=True,
+                        mode='auto', period=1))
+    callbackList.append(EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto', baseline=None, restore_best_weights=False))
+
+
+
+    if EnableKegarDebug == True:
+        history = LossHistory()
+        callbackList.append(history)
+        callbackList.append(TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch'))
+
     print("Initiating training")
     model.fit(train_data, train_labels,
               batch_size=10,
               epochs=150,  # using early stopping, so no real limit
               verbose=isKegarVerbose,
               validation_data=(test_data, test_labels),
-              callbacks=[ModelCheckpoint(WeightFileName, monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=True, mode='auto', period=1),
-                  EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto', baseline=None, restore_best_weights=False),])
+              callbacks= callbackList)
 
     weight = model.get_weights()
     #print(weight)
     print("End of  training")
-    nn.updateWeight(weight)
+
     score = model.evaluate(test_data, test_labels, verbose=isKegarVerbose)
 
     print(score)
+
+    if (nn.accuracy() < score[1]):
+        nn.updateWeight(weight)
+
+    if EnableKegarDebug == True:
+        print(history.losses)
+    """
+        fig, (ax1) = plt.subplots()
+
+        ax1.set_title('Progress of training')
+        ax1.semilogy(history.losses)
+        ax1.set_ylabel('Loss')
+        ax1.grid(True, which="both")
+        ax1.margins(0, 0.05)
+
+
+        plt.tight_layout()
+        plt.show()
+    """
+
     return score[1]  # 1 is accuracy. 0 is loss.
 
 
