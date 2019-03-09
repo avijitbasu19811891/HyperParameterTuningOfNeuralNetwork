@@ -73,7 +73,9 @@ class Generation:
       for nn in self._population:
          fitnessLevel = fitnessLevel + self._fitnessFn(nn)
          count = count + 1
-      self._fitnessLevel = fitnessLevel % count
+      self._fitnessLevel = fitnessLevel / count
+      print("totalFitness:"+str(fitnessLevel)+"count:"+str(count))
+      return self._fitnessLevel
 
    def evolve(self, breedFn=None, mutationFn=None):
       """

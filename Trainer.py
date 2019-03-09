@@ -117,6 +117,8 @@ import matplotlib.pyplot as plt
 fResult = open(ResultFileName, "w")
 
 
+from DebugUtils import GlobalTrainingTrend
+
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
     print(train_data.shape[1])
@@ -146,6 +148,9 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
                             kernel_initializer='random_uniform',
                             bias_initializer=initializers.Constant(0.1)))
 
+    """
+       This model is already trained. Start from the old weight
+    """
     if nn.isWeightSet() != 0:
         print("Reusing old weights:")
         model.set_weights(nn.getWeight())
@@ -203,28 +208,31 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     #print(weight)
     print("End of  training")
 
+    """
+       Try to evaluate this trained model, on the test data.
+       this will evaluate the accuracy of this model.
+    """
     score = model.evaluate(test_data, test_labels, verbose=isKegarVerbose)
 
     print(score)
 
+    """
+       Update the weight only when the accuracy has improved.
+    """
+
     if (nn.accuracy() < score[1]):
         nn.updateWeight(weight)
+        nn.updateAccuracy(score[1])
+    else:
+        GlobalTrainingTrend.updateDecInAccuracy(nn.accuracy(), score[1])
 
     if EnableKegarDebug == True:
         print(history.losses)
-    """
-        fig, (ax1) = plt.subplots()
-
-        ax1.set_title('Progress of training')
-        ax1.semilogy(history.losses)
-        ax1.set_ylabel('Loss')
-        ax1.grid(True, which="both")
-        ax1.margins(0, 0.05)
+        #loss = history.losses
+        #GlobalTrainingTrend.update(loss)
 
 
-        plt.tight_layout()
-        plt.show()
-    """
+
 
     return score[1]  # 1 is accuracy. 0 is loss.
 

@@ -19,6 +19,9 @@ import sys
 fLog = open(LogFileName, 'w')
 
 from Params import GlobalKnonwParams
+
+from DebugUtils import GlobalTrainingTrend
+
 def main():
     """Evolve a network."""
     generations = 10  # Number of times to evole the population.
@@ -58,9 +61,14 @@ def main():
        """
        trainedNNSet = trainWithEvolution(db1)
 
+    print("Training Trend:")
+    GlobalTrainingTrend.describe()
+
     for nn in trainedNNSet:
         nn.describe()
     fLog.close()
+
+
 
 
 if __name__ == '__main__':

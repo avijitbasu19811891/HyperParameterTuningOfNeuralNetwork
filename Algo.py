@@ -47,6 +47,8 @@ from Algo          import  TriggerTraining as trainAndEstimate
 
 from GenticOnNNPopulation import Generation
 
+from DebugUtils import GlobalTrainingTrend
+
 """
 This is the algorithm that trains and chooses top few NN 
 This is an alternate to the Mutation based evolve
@@ -105,7 +107,10 @@ def TrainGeneration(population, dataSet=None):
         """
         #evolvedPopulation = evolve(population, fitness)
         evolvedPopulation  = generation.evolve()
-        fitnessArray.append(generation.fitness())
+        avgFitness = generation.fitness()
+        fitnessArray.append(avgFitness)
+        print("Avg Fitness:")
+        print(avgFitness)
 
         print("Fittest population after this round of training:")
         for nn in evolvedPopulation:
@@ -137,9 +142,12 @@ def TrainGeneration(population, dataSet=None):
     sortedNN = [(fitness(nn), nn) for nn in evolvedPopulation]
 
     sortedNN = [x[1] for x in sorted(sortedNN, key=lambda x: x[0], reverse=True)]
-    print("Sorted on Accuracy")
 
-    print(fitnessArray)
+    print("Change of fitness wrt iterations")
+    for idx in fitnessArray:
+        print(idx)
+
+
     return sortedNN
 
 from Algo import TrainGeneration as generationFn

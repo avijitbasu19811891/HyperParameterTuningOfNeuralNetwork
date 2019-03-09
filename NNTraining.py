@@ -13,6 +13,5 @@ def TrainAndScore(nn, train_data, train_labels, test_data=None, test_labels=None
     """
     nn.describe()
     score = train(nn, train_data, train_labels, test_data, test_labels)
-    nn.updateAccuracy(score)
     print("Completed Training of network")
     nn.describe()
