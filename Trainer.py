@@ -106,9 +106,11 @@ from keras import layers, initializers
 
 from Params import ResultFileName
 
-from Params import isKegarVerbose
+from Params import isKerasVerbose
 
-from Params import EnableKegarDebug
+from Params import EnableKerasDebug
+from Params import reTrainExistingNetworks
+
 import sys
 
 import matplotlib
@@ -118,6 +120,8 @@ fResult = open(ResultFileName, "w")
 
 
 from DebugUtils import GlobalTrainingTrend
+
+from DebugUtils import KerasPlotModel
 
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
@@ -151,9 +155,10 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     """
        This model is already trained. Start from the old weight
     """
-    if nn.isWeightSet() != 0:
-        print("Reusing old weights:")
-        model.set_weights(nn.getWeight())
+    if reTrainExistingNetworks == False:
+        if nn.isWeightSet() != 0:
+            print("Reusing old weights:")
+            model.set_weights(nn.getWeight())
 
 
     # Output layer.
@@ -191,16 +196,16 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
 
 
-    if EnableKegarDebug == True:
+    if EnableKerasDebug == True:
         history = LossHistory()
         callbackList.append(history)
         callbackList.append(TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch'))
 
     print("Initiating training")
-    model.fit(train_data, train_labels,
+    modelHistory = model.fit(train_data, train_labels,
               batch_size=10,
               epochs=150,  # using early stopping, so no real limit
-              verbose=isKegarVerbose,
+              verbose=isKerasVerbose,
               validation_data=(test_data, test_labels),
               callbacks= callbackList)
 
@@ -212,27 +217,34 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
        Try to evaluate this trained model, on the test data.
        this will evaluate the accuracy of this model.
     """
-    score = model.evaluate(test_data, test_labels, verbose=isKegarVerbose)
+    score = model.evaluate(test_data, test_labels, verbose=isKerasVerbose)
 
     print(score)
+
+    nn.updateTrainingHistory(score[1], score[0])
 
     """
        Update the weight only when the accuracy has improved.
     """
 
     if (nn.accuracy() < score[1]):
+        json_string = model.to_json()
+        print(json_string)
+        GlobalTrainingTrend.updateIncInAccuracy(nn.accuracy(), score[1])
         nn.updateWeight(weight)
         nn.updateAccuracy(score[1])
+        nn.updateSummary(model.summary())
     else:
         GlobalTrainingTrend.updateDecInAccuracy(nn.accuracy(), score[1])
 
-    if EnableKegarDebug == True:
+    if EnableKerasDebug == True:
         print(history.losses)
+        model.summary()
         #loss = history.losses
         #GlobalTrainingTrend.update(loss)
 
 
-
+    KerasPlotModel(modelHistory, nn.nnName())
 
     return score[1]  # 1 is accuracy. 0 is loss.
 

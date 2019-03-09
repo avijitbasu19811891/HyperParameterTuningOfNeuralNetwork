@@ -25,7 +25,7 @@ GlobalKnonwParams = [
 ]
 
 # Number of times to evolve the population.
-Generations = 5
+Generations = 3
 # Number of networks in population
 Population = 20 + len(GlobalKnonwParams)
 
@@ -55,6 +55,7 @@ LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1
 WeightFileName = "../weightFile.txt"
+GraphPath = "../Graphs/"
 
 """
    Choose to train networks and then evolve them
@@ -71,7 +72,7 @@ reTrainExistingNetworks = False
 Keras params
 '''
 EpochCount = 150
-isKegarVerbose = False
+isKerasVerbose = False
 
-EnableKegarDebug = True
+EnableKerasDebug = True
 

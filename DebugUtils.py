@@ -14,7 +14,7 @@ class KegarTrainingTrend:
         self._avgFitness = []
         self._numOfTimesAccDec = 0
         self._accuracyDecTrend = []
-        self._accuracyIncTrend = 0
+        self._numOfTimesAccInc = 0
         self._accuracyIncTrend = []
         self._topFitness = []
     def update (self,loss):
@@ -28,28 +28,23 @@ class KegarTrainingTrend:
         self._numOfTimesAccDec += 1
         self._accuracyDecTrend.append([old,new])
     def updateIncInAccuracy(self, old, new):
-        self._accuracyIncTrend += 1
+        self._numOfTimesAccInc += 1
         self._accuracyIncTrend.append([old,new])
 
 
     def describe(self):
+        print("Num of times accucracy improved:" + str(self._numOfTimesAccInc))
         print("Num of times accucracy dec:"+str(self._numOfTimesAccDec))
         for elem in self._accuracyDecTrend:
             print(elem)
-            """
-            fig, (ax1) = plt.subplots()
 
-            ax1.set_title('Progress of training')
-            ax1.semilogy(self._avgFitness)
-            ax1.set_ylabel('Avg Fitness')
-            ax1.grid(True, which="both")
-            ax1.margins(0, 0.05)
+        plt.plot(self._avgFitness)
+        plt.title('Avg Fitness(Accuracy)')
+        plt.ylabel('Accuracy')
+        plt.xlabel('Genrration')
+        plt.savefig(GraphPath + "/" + "Fitness" + '.png')
 
-            """
-            plt.plot(self._avgFitness)
-            plt.tight_layout()
-            plt.show()
-
+        plt.close()
 
     """
         isImproving = 1
@@ -65,5 +60,44 @@ class KegarTrainingTrend:
             print("Did Training improve:"+str(isImproving))
             print(lossPerTraining)
     """
+
+from Params import GraphPath
+
+FileNumber = 0
+def KerasPlotModel(history, caption=None):
+    global FileNumber
+    """
+    # Plot training & validation accuracy values
+
+    plt.title('Model accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Test'], loc='upper left')
+
+    plt.savefig(GraphPath+ "/" + "Training"+str(FileNumber)+"loss"+'.png')
+    """
+    FileNumber = (int)(FileNumber+1)
+    # Plot training & validation loss values
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('Model loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend(['Train', 'Test'], loc='upper left')
+    if caption is not None:
+        plt.text(caption)
+    plt.savefig(GraphPath + "/" + "Training"+str(FileNumber) + "Loss" + '.png')
+    plt.close()
+
+def PlotIndividualTrainingTrend(NNName, accuracy):
+    global FileNumber
+    FileNumber = (int)(FileNumber+1)
+    # Plot training & validation loss values
+    plt.plot(accuracy)
+    plt.title('Neural Network accuracy Trend')
+    plt.ylabel('accuracy')
+    plt.xlabel('Iteration')
+    plt.savefig(GraphPath + "/" + NNName+"Training"+str(FileNumber) + "Loss" + '.png')
+    plt.close()
 
 GlobalTrainingTrend = KegarTrainingTrend()

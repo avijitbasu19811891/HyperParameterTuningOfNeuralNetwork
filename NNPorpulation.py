@@ -34,6 +34,12 @@ class NeuralNetwork:
 
         self._weight = []
         self._trainingModel = None
+        self._summary = None
+        self._lossTrend = []
+        self._accuracyTrend = []
+
+    def nnName(self):
+        str = "NN"+self._network['nb_neurons']+"_Neurons"+self._network['nb_layers']+"_Layers"+self._network['activation']+"_act"
 
     def updateAccuracy(self, accuracy):
         print("Updating accuracy")
@@ -51,8 +57,11 @@ class NeuralNetwork:
     def getWeight(self):
         return self._weight
 
-    def updateModel(selfself, model):
+    def updateModel(self, model):
         self._trainingModel = model
+
+    def updateSummary(self, summary):
+        self._summary = summary
 
     """
        Update entire set of neural parameters.
@@ -69,16 +78,29 @@ class NeuralNetwork:
     def accuracy(self):
         return self._accuracy
 
+    def updateTrainingHistory(self, accuracy, loss = None):
+        self._accuracyTrend.append(accuracy)
+        if loss is not None:
+            self._lossTrend.append(loss)
+
+
+    def trainingTrend(self):
+        return self._accuracyTrend
+
     def describe(self, detailed = False, fileId=None):
         if fileId is None:
            print(self._network)
            print("Accuracy:"+str(self._accuracy))
+           if self._summary is not None:
+               print(self._summary)
            if detailed is True:
               print("Weight:")
               print(self._weight)
         else:
             print(self._network,fileId)
             print("Accuracy:"+str(self._accuracy),fileId)
+
+
 
 class NNDb:
     def __init__(self, population, randomFn, nn_param_choices=None):

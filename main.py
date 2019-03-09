@@ -22,6 +22,8 @@ from Params import GlobalKnonwParams
 
 from DebugUtils import GlobalTrainingTrend
 
+from DebugUtils import PlotIndividualTrainingTrend
+
 def main():
     """Evolve a network."""
     generations = 10  # Number of times to evole the population.
@@ -64,8 +66,11 @@ def main():
     print("Training Trend:")
     GlobalTrainingTrend.describe()
 
+    idx = 0
     for nn in trainedNNSet:
         nn.describe()
+        PlotIndividualTrainingTrend(nn.nnName(), nn.trainingTrend())
+        idx = (int)(idx+1)
     fLog.close()
 
 
