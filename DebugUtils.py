@@ -93,11 +93,27 @@ def PlotIndividualTrainingTrend(NNName, accuracy):
     global FileNumber
     FileNumber = (int)(FileNumber+1)
     # Plot training & validation loss values
-    plt.plot(accuracy)
+    plt.plot(accuracy, 'ro')
     plt.title("Neural Network accuracy Trend for"+NNName)
     plt.ylabel('accuracy')
     plt.xlabel('Iteration')
     plt.savefig(GraphPath + "/" + NNName+"Training"+str(FileNumber) + "Loss" + '.png')
     plt.close()
+
+def PicturizeTestSet(model,xTest, yTest):
+    predicted_classes = model.predict_classes(xTrain)
+    correct_indices = np.nonzero(predicted_classes == yTest)[0]
+    incorrect_indices = np.nonzero(predicted_classes != yTest)[0]
+    print("in correct prediction")
+    print("Predicted, Correct")
+
+from sklearn.metrics import classification_report, confusion_matrix
+def PrintConfusionMatrix(xTest, yTest, yPred):
+    return
+    #matrix = confusion_matrix(yTest, yPred)
+    #print(matrix)
+
+
+
 
 GlobalTrainingTrend = KegarTrainingTrend()

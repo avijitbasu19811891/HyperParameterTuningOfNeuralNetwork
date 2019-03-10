@@ -110,6 +110,7 @@ from Params import isKerasVerbose
 
 from Params import EnableKerasDebug
 from Params import reTrainExistingNetworks
+from Params import KerasEnableDropOut
 
 import sys
 
@@ -122,6 +123,8 @@ fResult = open(ResultFileName, "w")
 from DebugUtils import GlobalTrainingTrend
 
 from DebugUtils import KerasPlotModel
+
+from DebugUtils import PrintConfusionMatrix
 
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
     keras.initializers.lecun_uniform(seed=None)
@@ -151,6 +154,11 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
             model.add(Dense(nb_neurons, activation=activation,
                             kernel_initializer='random_uniform',
                             bias_initializer=initializers.Constant(0.1)))
+            if KerasEnableDropOut == True:
+                if activation == 'relu':
+                    model.add(keras.layers.AlphaDropout(0.2))
+                if activation == 'selu':
+                    model.add(keras.layers.AlphaDropout(0.2))
 
     """
        This model is already trained. Start from the old weight
@@ -217,7 +225,8 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
        Try to evaluate this trained model, on the test data.
        this will evaluate the accuracy of this model.
     """
-    score = model.evaluate(test_data, test_labels, verbose=isKerasVerbose)
+    #score = model.evaluate(test_data, test_labels, verbose=isKerasVerbose)
+    score = Evaluate(model, train_data, train_labels, test_data, test_labels)
 
     print(score)
 
@@ -248,5 +257,8 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
     return score[1]  # 1 is accuracy. 0 is loss.
 
-
-
+def Evaluate(model, xTrain, yTrain, xTest, yTest):
+    score = model.evaluate(xTest, yTest, verbose=isKerasVerbose)
+    yPred = model.predict(xTest)
+    PrintConfusionMatrix(xTest, yTest, yPred)
+    return score
