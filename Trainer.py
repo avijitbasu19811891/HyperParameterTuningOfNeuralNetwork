@@ -243,6 +243,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         nn.updateWeight(weight)
         nn.updateAccuracy(score[1])
         nn.updateSummary(model.summary())
+        nn.updateModelJson(json_string)
     else:
         GlobalTrainingTrend.updateDecInAccuracy(nn.accuracy(), score[1])
 

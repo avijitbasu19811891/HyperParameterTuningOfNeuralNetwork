@@ -1,3 +1,7 @@
+
+
+GlobalSwMode = 'Train'
+
 GlobalNNParamChoices = {
     'nb_neurons': [256, 512, 1024],
     'nb_layers': [1, 2, 3],
@@ -25,14 +29,14 @@ GlobalKnonwParams = [
    {'nb_layers': 1, 'activation': 'tanh', 'optimizer': 'adamax', 'nb_neurons': 512},
    {'nb_layers': 2, 'activation': 'relu', 'optimizer': 'nadam', 'nb_neurons': 512},
    {'nb_layers': 1, 'activation': 'elu', 'optimizer': 'adagrad', 'nb_neurons': 256},
-   {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 1024}
+   {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 1024},
    {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 256}
 ]
 
 # Number of times to evolve the population.
-Generations = 5
+Generations = 3
 # Number of networks in population
-Population = 20 + len(GlobalKnonwParams)
+Population = 2 + len(GlobalKnonwParams)
 
 """
 From each generation choose the top
@@ -62,11 +66,14 @@ UpdateAllLogsToFile = 1
 WeightFileName = "../weightFile.txt"
 GraphPath = "../Graphs/"
 
+NeuronConfigFile = "../Result/config.txt"
+NeuronWeightFile = "../Result/weight.txt"
+
 """
    Choose to train networks and then evolve them
    Or to train a single generation of neurons
 """
-involveMutation = True
+involveMutation = False
 
 """
    When we choose the mutation based approach,

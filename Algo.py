@@ -79,9 +79,6 @@ def TrainWithoutMutation(db, dataSet=None):
 
 
     topNN = gradedNN[:numNNToChoose]
-    topNN[1].describe()
-    print("Describing top NN choosen after training")
-    printDeveloppedNN(topNN, "Describing top NN choosen after training")
 
     return topNN
 
