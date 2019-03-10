@@ -244,8 +244,10 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         nn.updateAccuracy(score[1])
         nn.updateSummary(model.summary())
         nn.updateModelJson(json_string)
-    else:
+    elif (nn.accuracy() > score[1]):
         GlobalTrainingTrend.updateDecInAccuracy(nn.accuracy(), score[1])
+    else:
+        print("")
 
     if EnableKerasDebug == True:
         print(history.losses)
