@@ -8,6 +8,8 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
+import numpy as np
+
 class KegarTrainingTrend:
     def __init__(self):
         self._lossTrend = []
@@ -37,7 +39,7 @@ class KegarTrainingTrend:
         print("Num of times accucracy dec:"+str(self._numOfTimesAccDec))
         for elem in self._accuracyDecTrend:
             print(elem)
-
+        self._avgFitness = np.array(self._avgFitness)
         plt.plot(self._avgFitness)
         plt.title('Avg Fitness(Accuracy)')
         plt.ylabel('Accuracy')

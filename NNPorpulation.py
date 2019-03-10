@@ -38,6 +38,7 @@ class NeuralNetwork:
         self._lossTrend = []
         self._accuracyTrend = []
         self._jsonConf = None
+        self._accuracyTrend.append(0.0)
 
     def nnName(self):
         name = "NN_"+str(self._network['nb_neurons'])+"_Neurons_"+str(self._network['nb_layers'])+"_Layers_"+self._network['activation']+"_act"
@@ -65,6 +66,20 @@ class NeuralNetwork:
 
     def getModelDetails(self):
         return self._jsonConf
+
+    def numLayers(self):
+        return self._network['nb_layers']
+
+    def numNeurons(self):
+        return self._network['nb_neurons']
+
+    def activation(self):
+        return self._network['activation']
+    def optimizer(self):
+        return self._network['optimizer']
+
+    def getParams(self):
+        return self.numLayers(), self.numNeurons(), self.activation(), self.optimizer()
 
     def updateSummary(self, summary):
         self._summary = summary

@@ -10,17 +10,22 @@ from  KerasModule import  KerasModel
 
 class AnalyzerModule:
     def __init__(self, isConfigFromFile, jsonConfig, weightConfig,
-                 jsonCnfFile, weightCnfFile):
+                 jsonCnfFile, weightCnfFile,
+                 numLayers,
+                 numNeurons,
+                 activation,
+                 optimizer):
         self._kerasModel = None
         if isConfigFromFile == True:
+           print("Read from Config file not supported")
            return
         else:
             self._kerasModel = KerasModel(weight= weightConfig,
                                           configJson = jsonConfig,
-                                          numLayers =None,
-                                          numNeurons = None,
-                                          activation = None,
-                                          optimizer = None);
+                                          numLayers =numLayers,
+                                          numNeurons = numNeurons,
+                                          activation = activation,
+                                          optimizer = optimizer);
 
 
         if self._kerasModel is not None:
@@ -32,7 +37,7 @@ class AnalyzerModule:
 
     def describe(self):
         if self._kerasModel is not None:
-            print(self._kerasModel.to_json())
+            self._kerasModel.describe()
 
 
 

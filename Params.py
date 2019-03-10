@@ -34,9 +34,9 @@ GlobalKnonwParams = [
 ]
 
 # Number of times to evolve the population.
-Generations = 3
+Generations = 7
 # Number of networks in population
-Population = 2 + len(GlobalKnonwParams)
+Population = 20 + len(GlobalKnonwParams)
 
 """
 From each generation choose the top
@@ -63,7 +63,7 @@ NumOfFileToLoad = 100
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1
-WeightFileName = "../weightFile.txt"
+WeightFileName = "../weightFile.csv"
 GraphPath = "../Graphs/"
 
 NeuronConfigFile = "../Result/config.txt"
@@ -73,7 +73,7 @@ NeuronWeightFile = "../Result/weight.txt"
    Choose to train networks and then evolve them
    Or to train a single generation of neurons
 """
-involveMutation = False
+involveMutation = True
 
 """
    When we choose the mutation based approach,

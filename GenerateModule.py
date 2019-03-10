@@ -1,5 +1,8 @@
 
-
+"""
+   This host code responsible for
+   1. Generate a popution of
+"""
 
 import logging
 from NNPorpulation import NeuralNetwork
@@ -82,6 +85,6 @@ def GenerateAndTrainNN(jsonFile, weighFile):
     nn = trainedNNSet[0]
     nn.describe()
 
-    return nn.getWeight(), nn.getModelDetails()
+    return nn.getWeight(), nn.getModelDetails(), nn.numLayers(), nn.numNeurons(), nn.activation(), nn.optimizer()
 
 

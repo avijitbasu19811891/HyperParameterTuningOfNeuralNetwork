@@ -13,6 +13,13 @@ from Params import ResultFileName
 from Params import UpdateAllLogsToFile
 import sys
 
+"""
+Deal with various file related operations 
+  Files are
+    Log file
+    Result file to capture selected NN.
+       This will will help to train NN and then resintantiate from the result.
+"""
 class FileModules:
     def __init__(self):
         self._oldStout = None
@@ -58,8 +65,12 @@ class FileModules:
 GlobalfileModule = FileModules()
 
 from KerasModule import SaveResult
+
 def launchSw ():
 
+    """
+       Redirect all prints to a log file
+    """
     if UpdateAllLogsToFile is not None:
         GlobalfileModule.redirctPrinttoFile()
 
@@ -68,13 +79,13 @@ def launchSw ():
        This will result the json-conf and weight of the top performing NN
     """
     if GlobalSwMode == 'Train':
-        jsonConf, weightArray = GenerateAndTrainNN(NeuronConfigFile, NeuronWeightFile)
+        weightArray , jsonConf, numLayers, numNeurons, activation, optimizer = GenerateAndTrainNN(NeuronConfigFile, NeuronWeightFile)
 
     """
        Save to file
     """
-    fConf, fWeight = GlobalfileModule.getResultFile()
-    SaveResult(fConf, fWeight)
+    fWeight , fConf = GlobalfileModule.getResultFile()
+    SaveResult(fConf, fWeight, config=None, weight=weightArray)
     GlobalfileModule.onCloseResultFile()
 
     GlobalfileModule.closePrint()
@@ -88,7 +99,11 @@ def launchSw ():
                               jsonConfig = jsonConf,
                               weightConfig = weightArray,
                               jsonCnfFile = None,
-                              weightCnfFile = None
+                              weightCnfFile = None,
+                              numLayers = None,
+                              numNeurons = None,
+                              activation = None,
+                              optimizer = None
                               )
     analyzer.describe()
 
