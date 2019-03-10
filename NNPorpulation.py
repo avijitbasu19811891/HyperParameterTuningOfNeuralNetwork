@@ -39,8 +39,8 @@ class NeuralNetwork:
         self._accuracyTrend = []
 
     def nnName(self):
-        str = "NN"+self._network['nb_neurons']+"_Neurons"+self._network['nb_layers']+"_Layers"+self._network['activation']+"_act"
-
+        name = "NN_"+str(self._network['nb_neurons'])+"_Neurons_"+str(self._network['nb_layers'])+"_Layers_"+self._network['activation']+"_act"
+        return name
     def updateAccuracy(self, accuracy):
         print("Updating accuracy")
         self._accuracy = accuracy

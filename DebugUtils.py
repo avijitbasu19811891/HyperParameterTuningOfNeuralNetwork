@@ -78,15 +78,15 @@ def KerasPlotModel(history, caption=None):
     """
     FileNumber = (int)(FileNumber+1)
     # Plot training & validation loss values
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('Model loss')
-    plt.ylabel('Loss')
+    #plt.plot(history.history['loss'])
+    #plt.plot(history.history['val_loss'])
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title("Model Accuracy for"+caption)
+    plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    if caption is not None:
-        plt.text(caption)
-    plt.savefig(GraphPath + "/" + "Training"+str(FileNumber) + "Loss" + '.png')
+    plt.savefig(GraphPath + "/" + "Training"+str(FileNumber) + "Accuracy" + '.png')
     plt.close()
 
 def PlotIndividualTrainingTrend(NNName, accuracy):
@@ -94,7 +94,7 @@ def PlotIndividualTrainingTrend(NNName, accuracy):
     FileNumber = (int)(FileNumber+1)
     # Plot training & validation loss values
     plt.plot(accuracy)
-    plt.title('Neural Network accuracy Trend')
+    plt.title("Neural Network accuracy Trend for"+NNName)
     plt.ylabel('accuracy')
     plt.xlabel('Iteration')
     plt.savefig(GraphPath + "/" + NNName+"Training"+str(FileNumber) + "Loss" + '.png')
