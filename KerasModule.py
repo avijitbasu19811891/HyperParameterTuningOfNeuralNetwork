@@ -68,16 +68,65 @@ class KerasModel:
             plot_model(self._model, to_file='../Graphs/model_plot.png', show_shapes=True, show_layer_names=True)
 
 
+import pickle
 """
   Save result of a model to file.
   This will help relaunch of NN, without training on every run of SW
 """
 def SaveResult( fConf, fWeight,config= None, weight= None):
     if config is None:
-        fConf.write("Result not Updated")
-    if weight is None:
-        fWeight.write("Wwight not updated")
+        fConf.write("Config not updated")
     else:
+        fConf.write(config)
+    if weight is None:
+        fWeight.write("Weight not updated")
+    else:
+        print("Saving weight")
         print(weight)
-        #np.savetxt("saved_numpy_data.csv", weight, delimiter=",", format='%10.5f')
+        pickle.dump(weight, fWeight)
 
+"""
+        print("Initial")
+        print(weight)
+        weight = np.asarray(weight)
+        print("Updated")
+        print(weight)
+        fWeight.write('# Array shape: {0}\n'.format(weight.shape))
+        # Iterating through a ndimensional array produces slices along
+        # the last axis. This is equivalent to data[i,:,:] in this case
+        for data_slice in weight:
+            # The formatting string indicates that I'm writing out
+            # the values in left-justified columns 7 characters in width
+            # with 2 decimal places.
+            np.savetxt(fWeight, data_slice, fmt='%-7.2f')
+            print("Writing weight")
+            print(data_slice)
+
+            # Writing out a break to indicate different slices...
+            fWeight.write('# New slice\n')
+        #np.savetxt("saved_numpy_data.csv", weight, delimiter=",", fmt='%10.5f')
+"""
+
+
+"""
+  Save result of a model to file.
+  This will help relaunch of NN, without training on every run of SW
+"""
+
+def LoadResult( fConf, fWeight):
+    config = None
+    weight = None
+    if fConf is None:
+        print("Config file not specified")
+    else:
+        config = fConf.read()
+        print("Reading config")
+        print(config)
+
+    if fWeight is None:
+        print("Weight file not specified")
+    else:
+        weight = pickle.load(fWeight)
+        print(" Read weight")
+        print(weight)
+    return config, weight

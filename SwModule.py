@@ -50,7 +50,7 @@ class FileModules:
     def getResultFile(self):
         self._fResultConf = open(NeuronConfigFile, "w")
         self._fWeightFile = open(NeuronWeightFile, "w")
-        return self._fResultConf, self._fWeightFile
+        return self._fWeightFile, self._fResultConf
 
     def onCloseResultFile(self):
         if self._fWeightFile is not None:
@@ -60,13 +60,17 @@ class FileModules:
     def readNeuronResult(self):
         self._fResultConf = open(NeuronConfigFile, "r")
         self._fWeightFile = open(NeuronWeightFile, "r")
-        return self._fResultConf, self._fWeightFile
+        return self._fWeightFile, self._fResultConf
 
 GlobalfileModule = FileModules()
 
 from KerasModule import SaveResult
+from KerasModule import LoadResult
+
+from Analyzer import AnalyzerThread
 
 def launchSw ():
+
 
     """
        Redirect all prints to a log file
@@ -81,14 +85,17 @@ def launchSw ():
     if GlobalSwMode == 'Train':
         weightArray , jsonConf, numLayers, numNeurons, activation, optimizer = GenerateAndTrainNN(NeuronConfigFile, NeuronWeightFile)
 
-    """
-       Save to file
-    """
-    fWeight , fConf = GlobalfileModule.getResultFile()
-    SaveResult(fConf, fWeight, config=None, weight=weightArray)
-    GlobalfileModule.onCloseResultFile()
+        """
+           Save to file
+         """
+        fWeight , fConf = GlobalfileModule.getResultFile()
+        SaveResult(fConf = fConf, fWeight = fWeight, config=jsonConf, weight=weightArray)
+        GlobalfileModule.onCloseResultFile()
 
-    GlobalfileModule.closePrint()
+    fRdWeight, fRdConfig = GlobalfileModule.readNeuronResult()
+
+    NNConfig, NNWeight = LoadResult(fWeight = fRdWeight, fConf= fRdConfig)
+
     print("Analyzer not yet supported")
 
     """
@@ -96,8 +103,8 @@ def launchSw ():
     """
 
     analyzer = AnalyzerModule(isConfigFromFile=False,
-                              jsonConfig = jsonConf,
-                              weightConfig = weightArray,
+                              jsonConfig = NNConfig,
+                              weightConfig = NNWeight,
                               jsonCnfFile = None,
                               weightCnfFile = None,
                               numLayers = None,
@@ -106,5 +113,13 @@ def launchSw ():
                               optimizer = None
                               )
     analyzer.describe()
+
+    GlobalfileModule.closePrint()
+
+    """
+       Periodically read csv files for 2 host.
+       invoke analyzer.run() and update to a file(file name indexed by vmm name) 
+    """
+    analyzerThread = AnalyzerThread()
 
     GlobalfileModule.closePrint()
