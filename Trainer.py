@@ -273,7 +273,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         #GlobalTrainingTrend.update(loss)
 
 
-    #KerasPlotModel(modelHistory, nn.nnName())
+    KerasPlotModel(modelHistory, nn.nnName())
 
 
     # Actual accuracy calculated manually:

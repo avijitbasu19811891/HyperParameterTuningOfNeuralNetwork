@@ -67,6 +67,12 @@ def TuneLabels(labels):
             labels[idx] = 0.0
     return labels
 
+
+def PrintDataTrend (data, labels, caption):
+    unique, counts = np.unique(labels, return_counts=True)
+    print(caption+" Data count:"+str(len(labels)))
+    print np.asarray((unique, counts)).T
+
 def load_data():
     file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
                  "./ml_data/5.csv", "./ml_data/6.csv"]
@@ -113,6 +119,9 @@ def load_data():
     print(train_data)
     print(train_labels)
     #test_data = removeOutlier(data)
+
+    PrintDataTrend(train_data, train_labels,"Training Data Stats")
+    PrintDataTrend(test_data, test_labels, "Testing Accuracy on Data Stats")
     return train_data, train_labels, test_data, test_labels
 
 

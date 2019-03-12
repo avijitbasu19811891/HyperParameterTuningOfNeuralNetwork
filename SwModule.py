@@ -69,6 +69,8 @@ from KerasModule import LoadResult
 
 from Analyzer import AnalyzerThread
 
+import time
+from DataSet import PrintDataTrend
 from DataSet import load_prediction_data as MaintainceLog
 def launchSw ():
 
@@ -121,21 +123,8 @@ def launchSw ():
        Periodically read csv files for 2 host.
        invoke analyzer.run() and update to a file(file name indexed by vmm name) 
     """
-    #analyzerThread = AnalyzerThread()
+    analyzerThread = AnalyzerThread(Predictor=analyzer)
 
-
-
-    testData, expectLabel = MaintainceLog()
-
-    print(testData)
-    print("Expected labels")
-    print(expectLabel)
-
-    print("Predicting")
-    predResult = analyzer.run(testData)
-
-    print(predResult)
-
-    print("")
+    analyzerThread.run()
 
     GlobalfileModule.closePrint()
