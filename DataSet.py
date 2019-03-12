@@ -59,6 +59,13 @@ def removeOutlier(data, label):
 
 from Params import RemoveOutlier
 
+def TuneLabels(labels):
+    for idx in range(len(labels)):
+        if labels[idx] > 5.0:
+            labels[idx] = 1.0
+        else:
+            labels[idx] = 0.0
+    return labels
 
 def load_data():
     file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
@@ -92,7 +99,9 @@ def load_data():
         data, labels = removeOutlier(data, labels)
 
     data = np.array(data)
+    #labels = TuneLabels(labels)
     labels = np.array(labels)
+
 
     n = int(float(data.shape[0]) * 0.8)
     train_data = data[:n]
@@ -106,3 +115,45 @@ def load_data():
     #test_data = removeOutlier(data)
     return train_data, train_labels, test_data, test_labels
 
+
+import os
+import random
+
+def load_prediction_data():
+    maintainceData = []
+    # make random
+    data = []
+    labels = []
+    print("loading data for prediction...")
+    i = 0
+    idx = 0
+    for fname in glob.glob(path):
+        maintainceData.append(fname)
+        if LoadPartial is not None:
+            if idx > NumOfFileToLoad:
+                break
+        idx +=1
+
+    fname = random.choice(maintainceData)
+    fname = "../ml_data/"+fname
+    print("Loading"+fname)
+    with open(fname, 'r') as infh:
+        reader = csv.reader(infh, delimiter=';')
+
+        for row in reader:
+            r = np.array(row, dtype=float)
+            rr = []
+            for i in range(sample_history):
+                rr.append(r[i * 7 + 1])
+                # print(rr)
+                data.append(rr)
+                labels.append(r[-1])
+            i = i+1
+    data = np.array(data)
+    labels = np.array(labels)
+
+    n = int(float(data.shape[0]) * 0.8)
+    test_data = data[n:]
+    test_labels = labels[n:]
+
+    return test_data, test_labels

@@ -69,9 +69,10 @@ from KerasModule import LoadResult
 
 from Analyzer import AnalyzerThread
 
+from DataSet import load_prediction_data as MaintainceLog
 def launchSw ():
 
-
+    optimizer = 'rmsprop'
     """
        Redirect all prints to a log file
     """
@@ -110,7 +111,7 @@ def launchSw ():
                               numLayers = None,
                               numNeurons = None,
                               activation = None,
-                              optimizer = None
+                              optimizer = optimizer
                               )
     analyzer.describe()
 
@@ -120,6 +121,21 @@ def launchSw ():
        Periodically read csv files for 2 host.
        invoke analyzer.run() and update to a file(file name indexed by vmm name) 
     """
-    analyzerThread = AnalyzerThread()
+    #analyzerThread = AnalyzerThread()
+
+
+
+    testData, expectLabel = MaintainceLog()
+
+    print(testData)
+    print("Expected labels")
+    print(expectLabel)
+
+    print("Predicting")
+    predResult = analyzer.run(testData)
+
+    print(predResult)
+
+    print("")
 
     GlobalfileModule.closePrint()

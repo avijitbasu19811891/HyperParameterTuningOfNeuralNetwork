@@ -55,10 +55,27 @@ class KerasModel:
             """
             self._model = keras.models.Sequential()
 
-    def executePrediction(self, Data):
+        #self._model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+
+    def train(self, data, labels):
+        history = self._model.fit(data, labels,
+              batch_size=10,
+              epochs=10,  # using early stopping, so no real limit
+              verbose=2,
+              validation_data=(data, labels),
+              callbacks = None)
+
+              #callbacks= EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='auto', baseline=None, restore_best_weights=False))
+
+
+        score = self._model.evaluate(data, labels, verbose=2)
+        print("Scores after training")
+        print(score)
+
+    def executePrediction(self, data):
         predictResult = None
         if self._model is not None:
-            predictResult = self._model.predict(data)
+            predictResult = self._model.predict_classes(data)
         return predictResult
 
     def describe(self):

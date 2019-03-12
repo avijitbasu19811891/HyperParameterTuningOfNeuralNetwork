@@ -33,7 +33,11 @@ class AnalyzerModule:
 
     def run(self, DataSet):
         print(" Predicting")
-        result = self._kerasModel.executePrediction()
+        result = self._kerasModel.executePrediction(DataSet)
+        return result
+
+    def train(self, data, labels):
+        return self._kerasModel.train( data, labels)
 
     def describe(self):
         if self._kerasModel is not None:

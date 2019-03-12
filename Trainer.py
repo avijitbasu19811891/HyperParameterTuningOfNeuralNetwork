@@ -126,7 +126,17 @@ from DebugUtils import KerasPlotModel
 
 from DebugUtils import PrintConfusionMatrix
 
+from keras.metrics import categorical_accuracy
+
 def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
+
+    xTest_bak = test_data
+    yTest_bak = test_labels
+
+    yTrainCat = keras.utils.to_categorical(train_labels, num_classes=10, dtype='float32')
+
+    yTestCat = keras.utils.to_categorical(test_labels, num_classes=10, dtype='float32')
+    print("Shape:")
     keras.initializers.lecun_uniform(seed=None)
     print(train_data.shape[1])
     # Get our network parameters.
@@ -147,7 +157,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
 
         # Need input shape for first layer.
         if i == 0:
-            model.add(Dense(nb_neurons, activation='relu', input_shape=(train_data.shape[1],),
+            model.add(Dense(nb_neurons, activation=None, input_shape=(train_data.shape[1],),
                             kernel_initializer='random_uniform',
                             bias_initializer=initializers.Constant(0.1)))
         else:
@@ -159,6 +169,8 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
                     model.add(keras.layers.AlphaDropout(0.2))
                 if activation == 'selu':
                     model.add(keras.layers.AlphaDropout(0.2))
+    # Output layer.
+    model.add(Dense(10, activation='softmax'))
 
     """
        This model is already trained. Start from the old weight
@@ -169,14 +181,19 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
             model.set_weights(nn.getWeight())
 
 
-    # Output layer.
-    model.add(Dense(1, activation=None))
 
+
+    """
+    model.compile(loss='binary_crossentropy', optimizer=optimizer,
+                  metrics=[categorical_accuracy])
+    """
+    tf.keras.backend.set_learning_phase(1)
+    """
     model.compile(loss='binary_crossentropy', optimizer=optimizer,
                   metrics=['accuracy'])
-
-
-
+    """
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer,
+                  metrics=['accuracy'])
     labels = []
     for label in train_labels:
         l = np.zeros(num_classes)
@@ -210,11 +227,11 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         callbackList.append(TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch'))
 
     print("Initiating training")
-    modelHistory = model.fit(train_data, train_labels,
+    modelHistory = model.fit(train_data, yTrainCat,
               batch_size=10,
               epochs=150,  # using early stopping, so no real limit
               verbose=isKerasVerbose,
-              validation_data=(test_data, test_labels),
+              validation_data=(test_data, yTestCat),
               callbacks= callbackList)
 
     weight = model.get_weights()
@@ -226,7 +243,7 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
        this will evaluate the accuracy of this model.
     """
     #score = model.evaluate(test_data, test_labels, verbose=isKerasVerbose)
-    score = Evaluate(model, train_data, train_labels, test_data, test_labels)
+    score = Evaluate(model, train_data, yTrainCat, xTest_bak, yTestCat)
 
     print(score)
 
@@ -256,12 +273,24 @@ def trainKeras(nn, train_data, train_labels, test_data=None, test_labels=None):
         #GlobalTrainingTrend.update(loss)
 
 
-    KerasPlotModel(modelHistory, nn.nnName())
+    #KerasPlotModel(modelHistory, nn.nnName())
 
+
+    # Actual accuracy calculated manually:
+    """
+    y_pred = model.predict(test_data)
+    print(y_pred)
+    acc = sum([np.argmax(test_labels[i]) == np.argmax(y_pred[i]) for i in range(len(test_labels))]) / 10000
+    print("Accuracy:")
+    print(acc)
+    """
     return score[1]  # 1 is accuracy. 0 is loss.
 
 def Evaluate(model, xTrain, yTrain, xTest, yTest):
+
     score = model.evaluate(xTest, yTest, verbose=isKerasVerbose)
-    yPred = model.predict(xTest)
+
+
+    yPred = None
     PrintConfusionMatrix(xTest, yTest, yPred)
     return score

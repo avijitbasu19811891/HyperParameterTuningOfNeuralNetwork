@@ -27,14 +27,13 @@ def RandomChoiceFn (key, paramsChoice):
 
 GlobalKnonwParams = [
    {'nb_layers': 1, 'activation': 'tanh', 'optimizer': 'adamax', 'nb_neurons': 512},
-   {'nb_layers': 2, 'activation': 'relu', 'optimizer': 'nadam', 'nb_neurons': 512},
    {'nb_layers': 1, 'activation': 'elu', 'optimizer': 'adagrad', 'nb_neurons': 256},
    {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 1024},
    {'nb_layers': 1, 'activation': 'sigmoid', 'optimizer': 'adamax', 'nb_neurons': 256}
 ]
 
 # Number of times to evolve the population.
-Generations = 7
+Generations = 3
 # Number of networks in population
 Population = 20 + len(GlobalKnonwParams)
 
@@ -59,7 +58,7 @@ RemoveOutlier = True
    For testing purpose, we can choose to load a partial set of data
 """
 LoadPartial=1
-NumOfFileToLoad = 100
+NumOfFileToLoad = 200
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1
