@@ -30,14 +30,19 @@ def confusionMatrix(yPred, yExpect):
     return [ErrorCount, CorrectCount]
 
 """
+from PlotGraphs import plotMatrix
 from sklearn.metrics import classification_report, confusion_matrix
 
 def confusionMatrix(yPred, yExpect, fileName):
     cm = confusion_matrix(yExpect, yPred)
     print(cm)
+    labels=['0','1','2','3','4','5','6','7','8','9']
+    plotMatrix(cm, labels, "ConfusionMatrix of Prediction", fileName)
+"""
     fig = plt.figure()
     ax = fig.add_subplot(333)
-    cax = ax.matshow(cm, cmap=plt.cm.Blues)
+
+    cax = ax.matshow(cm, cmap=plt.cm.Grey)
     plt.title('Confusion matrix of the classifier')
     fig.colorbar(cax)
     #ax.set_xticklabels([''] + labels)
@@ -46,7 +51,7 @@ def confusionMatrix(yPred, yExpect, fileName):
     plt.ylabel('True')
     plt.savefig(fileName)
     plt.close()
-
+"""
 
 
 
