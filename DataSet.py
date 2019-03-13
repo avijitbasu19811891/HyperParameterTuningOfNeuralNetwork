@@ -133,36 +133,43 @@ def load_prediction_data():
     # make random
     data = []
     labels = []
+    flist = []
     print("loading data for prediction...")
     i = 0
     idx = 0
     for fname in glob.glob(path):
-        maintainceData.append(fname)
+        fileName = "../ml_data/"+fname
+        maintainceData.append(fileName)
         if LoadPartial is not None:
             if idx > NumOfFileToLoad:
                 break
         idx +=1
 
-    fname = random.choice(maintainceData)
-    fname = "../ml_data/"+fname
-    print("Loading"+fname)
-    with open(fname, 'r') as infh:
-        reader = csv.reader(infh, delimiter=';')
+    for idx in range(0,7):
+        fname = random.choice(maintainceData)
+        flist.append(fname)
 
-        for row in reader:
-            r = np.array(row, dtype=float)
-            rr = []
-            for i in range(sample_history):
-                rr.append(r[i * 7 + 1])
-                # print(rr)
-                data.append(rr)
-                labels.append(r[-1])
-            i = i+1
+    for fname in flist:
+        #fname = "../ml_data/"+fname
+        print("Loading"+fname)
+        with open(fname, 'r') as infh:
+            reader = csv.reader(infh, delimiter=';')
+            for row in reader:
+               r = np.array(row, dtype=float)
+               rr = []
+               for i in range(sample_history):
+                   rr.append(r[i * 7 + 1])
+                   # print(rr)
+                   data.append(rr)
+                   labels.append(r[-1])
+                   i = i+1
+
     data = np.array(data)
     labels = np.array(labels)
 
     n = int(float(data.shape[0]) * 0.8)
-    test_data = data[n:]
-    test_labels = labels[n:]
+    test_data = data[:n]
+    test_labels = labels[:n]
 
     return test_data, test_labels
+
