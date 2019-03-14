@@ -73,9 +73,54 @@ def PrintDataTrend (data, labels, caption):
     print(caption+" Data count:"+str(len(labels)))
     print np.asarray((unique, counts)).T
 
+import pandas as pd
+from pandas.plotting import scatter_matrix
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+
+"""
+   @brief Provide some formatting and some visualtization of data being used for
+           training and for testing
+"""
+def FormatData(data, labels):
+    headerInfo = ['CPU load', 'Memory:', 'I/O:', 'Network:', 'Params1:',
+                  'Params2:', 'Params3:', 'Params4:', 'Params5:', 'Label']
+    dataSet = pd.DataFrame({'CPU load': data[:, 0],
+                            'Memory:': data[:, 1],
+                            'I/O:': data[:, 2],
+                            'Network:': data[:, 3],
+                            'Params1:': data[:,4],
+                            'Params2:' : data[:,5],
+                            'Params3:' : data[:,6],
+                            'Params4:' : data[:,7],
+                            'Params5:' : data[:,8],
+                            'VM_LOAD_LEVEL:': labels})
+    dataSet.to_csv("../FormattedData/FormattedData.csv", index=True,
+                   index_label='Time Instance',
+                   header=headerInfo)
+
+    dataSet.hist(column=['CPU load', 'Memory:', 'I/O:', 'VM_LOAD_LEVEL:' ])
+    plt.savefig("../Graphs/TrainingData_hist.png")
+    plt.close()
+
+    correlations = dataSet.corr()
+    # plot correlation matrix
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(correlations)
+    fig.colorbar(cax)
+    """
+    ticks = numpy.arange(0, 9, 1)
+    ax.set_xticks(ticks)
+    ax.set_yticks(ticks)
+    """
+    ax.set_xticklabels(headerInfo)
+    ax.set_yticklabels(headerInfo)
+    plt.savefig("../Graphs/TrainingData_corr.png")
+
+
 def load_data():
-    file_name = ["./ml_data/1.csv", "./ml_data/2.csv", "./ml_data/3.csv", "./ml_data/4.csv",
-                 "./ml_data/5.csv", "./ml_data/6.csv"]
     data = []
     labels = []
 
@@ -108,7 +153,7 @@ def load_data():
     #labels = TuneLabels(labels)
     labels = np.array(labels)
 
-
+    FormatData(data, labels)
     n = int(float(data.shape[0]) * 0.8)
     train_data = data[:n]
     train_labels = labels[:n]

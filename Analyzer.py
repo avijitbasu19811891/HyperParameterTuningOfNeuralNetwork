@@ -20,18 +20,81 @@ from PlotGraphs import plotMatrix
 from PlotGraphs import PlotData
 from sklearn.metrics import classification_report, confusion_matrix
 
+def ClassToDescription(c):
+
+    if c < 2:
+        desc = "VM Lightly Loaded \n"
+    elif c < 5:
+        desc = "Vm load is moderately higher \n"
+    elif c < 8:
+        desc = "Vm load on Higher side \n"
+    else:
+        desc = "VM in Host zone, need to be migrated"
+    return "Class_"+str(c)+"_," + "_"+ desc
+
 def confusionMatrix(yPred, yExpect, fileName):
     cm = confusion_matrix(yExpect, yPred)
     print(cm)
     labels=['0','1','2','3','4','5','6','7','8','9']
     plotMatrix(cm, labels, "ConfusionMatrix of Prediction", fileName)
 
+import pandas as pd
 
+def dataDescription(data, labels):
+    # Creating pandas dataframe from numpy array
+    data = np.asarray(data)
+    labels = np.asarray(labels)
+
+    descr = []
+    for p in labels:
+        descr.append(ClassToDescription(p))
+
+    descr = np.asarray(descr)
+    print(descr.shape)
+
+    dataset = pd.DataFrame({'CPU load': data[:, 0],
+                            'Memory:': data[:, 1],
+                            'I/O:': data[:, 2],
+                            'Network:': data[:,3],
+                            'Label:': labels,
+                            'descr:': descr})
+
+    print(dataset)
+    return dataset
+
+import datetime
 def UpdatePredictionResult(data, predLabels, labels=None):
+    dataSet = dataDescription(data, predLabels)
+
+    fname = PredictResultPath + "VmHost_Analyzer.csv"
+
+    dataSet.to_csv(fname, index = None,mode='a', header=['CPU load', 'Memory:', 'I/O:', 'Network', 'Label:','descr:'])
+
+    """
+    fname = PredictResultPath + "VmHost_Analyzer.txt"
+
+    idx = 0
+    f = open(fname, "a")
+    now = datetime.datetime.now()
+    f.write("\n \n \n Storing VM host load and suggested action on "+str(now)+"\n")
+    for d in data:
+       d = np.asarray(d)
+
+       f.write("\n Host Monitoring Data:\n")
+       np.savetxt(f, d)
+       f.write("\n"+ClassToDescription(predLabels[idx])+"\n \n")
+       idx += 1
+    f.write("\n \n \n")
+    f.close()
+    """
+
     global PredictFileNumber
     PredictFileNumber = (int)(PredictFileNumber + 1)
 
     fname = PredictResultPath +"PredictionResult" +str(PredictFileNumber)+ '.png'
+
+
+
     PlotData(data=data, labels=predLabels, fileInfo=fname, Caption="PredictionResult")
     if labels is not None:
         fname = PredictResultPath + "PredictionConfusionMat" + str(PredictFileNumber) + '.png'
@@ -44,7 +107,7 @@ class AnalyzerThread():
     until the application exits.
     """
 
-    def __init__(self, interval=20, callBack =None, Args =None, Predictor = None):
+    def __init__(self, interval=40, callBack =None, Args =None, Predictor = None):
         """ Constructor
         :type interval: int
         :param interval: Check interval, in seconds
