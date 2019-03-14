@@ -15,22 +15,9 @@ import pandas as pd
 PredictResultPath = "../PredictResult/"
 PredictFileNumber = 0
 
-"""
-def confusionMatrix(yPred, yExpect):
-    compare = yPred == yExpect
 
-    position = 0
-    ErrorCount = 0
-    CorrectCount = 0
-    for c in compare:
-        if c == False:
-           ErrorCount += 1
-        else:
-            CorrectCount += 1
-    return [ErrorCount, CorrectCount]
-
-"""
 from PlotGraphs import plotMatrix
+from PlotGraphs import PlotData
 from sklearn.metrics import classification_report, confusion_matrix
 
 def confusionMatrix(yPred, yExpect, fileName):
@@ -38,63 +25,17 @@ def confusionMatrix(yPred, yExpect, fileName):
     print(cm)
     labels=['0','1','2','3','4','5','6','7','8','9']
     plotMatrix(cm, labels, "ConfusionMatrix of Prediction", fileName)
-"""
-    fig = plt.figure()
-    ax = fig.add_subplot(333)
-
-    cax = ax.matshow(cm, cmap=plt.cm.Grey)
-    plt.title('Confusion matrix of the classifier')
-    fig.colorbar(cax)
-    #ax.set_xticklabels([''] + labels)
-    #ax.set_yticklabels([''] + labels)
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.savefig(fileName)
-    plt.close()
-"""
 
 
-
-def DumpData(data, predLabels, labels=None):
+def UpdatePredictionResult(data, predLabels, labels=None):
     global PredictFileNumber
     PredictFileNumber = (int)(PredictFileNumber + 1)
 
-    shape = [data.shape[1], data.shape[0]]
-
-
-    dataToPlot = np.reshape(data, shape)
-
-    dataToPlot = dataToPlot[:3]
-
-
-    """
-    plt.plot(dataToPlot)
-    plt.plot(predLabels)
-    plt.title("Prediction")
-    plt.ylabel('Values')
-    plt.xlabel('Time')
-    #plt.legend(['Train', 'Test'], loc='upper left')
-    """
-    fig = plt.figure()
-    ax1 = plt.subplot(211)
-    ax2 = plt.subplot(212)
-
-
-    ax1.plot( dataToPlot)
-    ax2.plot( predLabels)
-
-
-    ax1.get_shared_x_axes().join(ax1, ax2)
-    ax1.set_xticklabels([])
-
-    ax1.yaxis.set_label("Vm CPU, Mem, I/O load")
-    ax1.yaxis.set_label("Predicted Class")
-    plt.savefig(PredictResultPath +"Predict" +str(PredictFileNumber)+ '.png')
-    plt.close()
-    fname = PredictResultPath +"Confusion" +str(PredictFileNumber)+ '.png'
+    fname = PredictResultPath +"PredictionResult" +str(PredictFileNumber)+ '.png'
+    PlotData(data=data, labels=predLabels, fileInfo=fname, Caption="PredictionResult")
     if labels is not None:
+        fname = PredictResultPath + "PredictionConfusionMat" + str(PredictFileNumber) + '.png'
         confusionMatrix(yPred=predLabels, yExpect=labels, fileName=fname)
-        #print("PredictionStats Error"+str(err) +"vs Expected:"+ str(correct))
 
 
 class AnalyzerThread():
@@ -131,7 +72,7 @@ class AnalyzerThread():
 
         print(predResult)
 
-        DumpData(data=testData, predLabels=predResult, labels=expectLabel)
+        UpdatePredictionResult(data=testData, predLabels=predResult, labels=expectLabel)
 
         print("")
     def run(self):

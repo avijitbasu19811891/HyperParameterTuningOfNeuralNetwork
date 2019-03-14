@@ -1,5 +1,7 @@
 import argparse
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as colors
@@ -7,17 +9,21 @@ import matplotlib.patches as patches
 
 
 
+
 LABEL_SIZE = 14
 VALUE_SIZE = 12
 LABEL_ROTATION = 0
 
-# Plot the matrix: show and save as image
+"""
+ Plot the matrix: show and save as image
+"""
 def plotMatrix(cm, labels, title, fname):
     # Transform to percentage
+    """
     for row in range(0, len(cm)):
         rowSum = np.sum(cm[row])
         cm[row] = cm[row] / rowSum * 100
-
+    """
     print("> Plot confusion matrix to", fname, "...")
     fig = plt.figure()
 
@@ -55,4 +61,36 @@ def plotMatrix(cm, labels, title, fname):
     # Show the plot in a window
     plt.close()
 
+"""
+     Plot graph of Host Monitored Params and corresponding class
+     This class can be either of predicted class or the labeled class
+"""
+def PlotData(data,labels, fileInfo, Caption):
+    shape = [data.shape[1], data.shape[0]]
 
+    dataToPlot = np.reshape(data, shape)
+
+    dataToPlot = dataToPlot[:3]
+
+    """
+    plt.plot(dataToPlot)
+    plt.plot(predLabels)
+    plt.title("Prediction")
+    plt.ylabel('Values')
+    plt.xlabel('Time')
+    #plt.legend(['Train', 'Test'], loc='upper left')
+    """
+    fig = plt.figure()
+    ax1 = plt.subplot(211)
+    ax2 = plt.subplot(212)
+
+    ax1.plot(dataToPlot)
+    ax2.plot(labels)
+
+    ax1.get_shared_x_axes().join(ax1, ax2)
+    ax1.set_xticklabels([])
+
+    ax1.yaxis.set_label("Vm CPU, Mem, I/O load")
+    ax1.yaxis.set_label("Class")
+    plt.savefig(fileInfo)
+    plt.close()
