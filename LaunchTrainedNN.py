@@ -1,3 +1,12 @@
+"""
+    Code to launch a Analyzer model, from the last trained parameters.
+    This Analyzer will perform following
+        1. Launch a keras model from a numpy array of weights, json string of config
+           Save this model.
+        2. Provide a run() function to take a dataset and execute prediction
+           This passes the params to the keras model launched earlier
+
+"""
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.callbacks import EarlyStopping

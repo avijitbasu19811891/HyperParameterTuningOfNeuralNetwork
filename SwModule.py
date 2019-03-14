@@ -1,3 +1,24 @@
+"""
+   Code this application
+     Divided to 2 parts
+      1. Generate module: Generate a population of NN, train and keep evelovving across generations
+                          At each generation choose top few NN(fitness being accuracy on test data).
+                          At end of each generation , add a few child, by choosing hyper params from 2 fit parents.
+                          After a few few generation iteration, choose the top 1 and return
+      2. Analyzer module: This will create a keras model. PArams of this keras will be the weight and json config of top
+                          NN, saved at end of generate module.
+                          Analyzer module will run, at interval, reading new data sets and predicting class of VM host.
+                          Data being: VM host prams collected by monitoring of VM hosts. Thsi data collection is not part of this WS
+                          Prediction: Class of this VM host 0 to 9
+                          0-2 VM load will be light
+                          3-6 Moderately loaded
+                          7-9 Highly loaded VM
+
+                          Predicted label will be used by a seperate Sw to take corrective actions like
+                          1. Rebablance Sheaf
+                          2. Rebalance VM hosts.
+                          3. Shutdown Highly loaded VMs.
+"""
 from GenerateModule import GenerateAndTrainNN
 
 from Params import GlobalSwMode
@@ -72,6 +93,8 @@ from Analyzer import AnalyzerThread
 import time
 from DataSet import PrintDataTrend
 from DataSet import load_prediction_data as MaintainceLog
+
+
 def launchSw ():
 
     optimizer = 'rmsprop'

@@ -1,3 +1,45 @@
+"""
+   Host Code to launch a keras model, from NN params
+   Then the model is trained and then tested for accuracy on test data
+   This will return the accuracy of this NN
+   Logic of create of Keras:
+     1. Get following prmeters from NN
+        activation, num of layers, num of neurons per layer,
+        optimizer
+    2. launch a keral Sequential model, as per dimention of input data
+        Add layers(as speficied in num of layer params of NN)
+        specify activation function.
+    3. This is for multi label Keras. O/p of model, should provide an idea of
+       possible class for this dataset.
+       Class in our example is a label 0 to 9, indicating how much loaded
+         host be in short future.
+       So convert the label[0 to 9] to category
+       0 : [1 0 0 0 0 0 0 0 0 0]
+       1:  [0 1 0 0 0 0 0 0 0 0]
+
+       9: [0 1 0 0 0 0 0 0 0 1]
+    4. Dimention of model will be as follows
+       Input layer: can accept data of dimetion of each data set
+                    activation None
+       Output layer: dimension same as num of class
+                    activation softmax
+        hiden layers: dimention., as per num of neurons in NN param
+                      activattion as per 'activation' param of NN
+     5. Compile the mopdel
+   Training:
+       Fit() on the training set
+          Use early stopping is loss not improving across more than 2 consecutive itetrations
+     6. Estimate model on Test data
+       If accuray more than last accuracy of the NN:
+          update weight, save model,
+          update accuracy
+     7. For debug and performance monitoring of algorithm update following to NN
+       accuracy of this iteration of training.
+       how loss trend through multiple epoch of this training iteration
+
+   This will update following to NN
+     1.
+"""
 import tensorflow as tf
 import numpy as np
 from NNPorpulation import NeuralNetwork

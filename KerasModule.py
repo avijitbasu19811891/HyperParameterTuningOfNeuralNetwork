@@ -1,4 +1,9 @@
 
+"""
+   Code to host a Keras model that is spawned after training.
+      This model will be mostly host from set of parameters saved after Training Phase of networks
+      are complete
+"""
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Activation
@@ -34,6 +39,11 @@ from keras.utils.vis_utils import plot_model
 Class to launch a Keras from an existing jsonconf and predefined weights.
 """
 class KerasModel:
+    """
+       @brief Model can be launched from previously saved weight and config
+       @param[in]  weight  numpy array of weights
+       @param[in]  configJson Json string for config of this model
+    """
     def __init__(self, weight,
                  configJson,
                  numLayers,
@@ -53,9 +63,7 @@ class KerasModel:
             """ 
                Generate model from params
             """
-            self._model = keras.models.Sequential()
-
-        #self._model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+            print("Not supported")
 
     def train(self, data, labels):
         history = self._model.fit(data, labels,
@@ -85,6 +93,7 @@ class KerasModel:
             plot_model(self._model, to_file='../Graphs/model_plot.png', show_shapes=True, show_layer_names=True)
 
 
+
 import pickle
 """
   Save result of a model to file.
@@ -101,28 +110,6 @@ def SaveResult( fConf, fWeight,config= None, weight= None):
         print("Saving weight")
         print(weight)
         pickle.dump(weight, fWeight)
-
-"""
-        print("Initial")
-        print(weight)
-        weight = np.asarray(weight)
-        print("Updated")
-        print(weight)
-        fWeight.write('# Array shape: {0}\n'.format(weight.shape))
-        # Iterating through a ndimensional array produces slices along
-        # the last axis. This is equivalent to data[i,:,:] in this case
-        for data_slice in weight:
-            # The formatting string indicates that I'm writing out
-            # the values in left-justified columns 7 characters in width
-            # with 2 decimal places.
-            np.savetxt(fWeight, data_slice, fmt='%-7.2f')
-            print("Writing weight")
-            print(data_slice)
-
-            # Writing out a break to indicate different slices...
-            fWeight.write('# New slice\n')
-        #np.savetxt("saved_numpy_data.csv", weight, delimiter=",", fmt='%10.5f')
-"""
 
 
 """

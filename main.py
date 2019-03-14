@@ -1,6 +1,10 @@
-from GenerateModule import GenerateAndTrainNN
 
-from Params import GlobalSwMode
+"""
+    @brief Main function
+"""
+"""
+   SwModule host the cod for this Application
+"""
 from SwModule import launchSw
 def main():
     launchSw()

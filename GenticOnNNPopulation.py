@@ -12,6 +12,12 @@ from Params        import FitnessPopulationPercent as fitnessPercent
 
 import random
 
+"""
+  @brief Breed a new child from 2 parents.
+         This include choose following parameters from each
+           activation, num of layer, num of neurons , optimizer
+         This child will be fed to training later
+"""
 def genrateChildParamFromParent(parent1, parent2):
    childParam = {}
    for key in nnParams:
@@ -21,6 +27,12 @@ def genrateChildParamFromParent(parent1, parent2):
       childParam[key] = param
    return childParam
 
+"""
+   @brief Update few child neural networks to a pupulation of fit and trained
+          neural networks
+   @param[in]: fittestSet: set of fit parent, child will be appended to this population
+   @param[in]  maxNumChild: how much can this population fit
+"""
 def BreedChild(fittestSet, maxNumChild):
    parentLen = len(fittestSet)
    print("Breeding Childs"+" parent set len:"+str(parentLen)+" max child:"+str(maxNumChild))
@@ -45,7 +57,9 @@ def BreedChild(fittestSet, maxNumChild):
 
 
 """
-Mutate a particular NN
+    @brief Mutate a particular NN
+           This is kostly applied to one child NN
+           choose of params randomly like activation, optimizer, num of layers and change that.
 """
 def MutateNN(nn):
    print("Before mutation")
@@ -58,6 +72,9 @@ def MutateNN(nn):
    print("After Mutation")
    nn.describe()
 
+"""
+   @class This is the class to host population of a generation of NN
+"""
 class Generation:
    _population = []
    _fitnessFn = None
@@ -126,7 +143,3 @@ class Generation:
    def train(self,trainFn):
       for nn in self._population:
          trainFn(nn)
-
-
-
-

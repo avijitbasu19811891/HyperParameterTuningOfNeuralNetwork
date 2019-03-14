@@ -6,8 +6,8 @@ def testPrint(text):
     print(text)
 
 class NeuralNetwork:
-    """Represent a network and let us operate on it.
-    Currently only works for an MLP.
+    """
+       Represent a network and let us operate on it.
     """
 
     def __init__(self, nnParams, randomFn, nn_param_choices=None):
