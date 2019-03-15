@@ -1,6 +1,6 @@
 
 
-GlobalSwMode = 'Train'
+GlobalSwMode = "Analyzer"
 
 GlobalNNParamChoices = {
     'nb_neurons': [256, 512, 1024],
@@ -33,7 +33,7 @@ GlobalKnonwParams = [
 ]
 
 # Number of times to evolve the population.
-Generations = 3
+Generations = 5
 # Number of networks in population
 Population = 20 + len(GlobalKnonwParams)
 
@@ -58,7 +58,7 @@ RemoveOutlier = True
    For testing purpose, we can choose to load a partial set of data
 """
 LoadPartial=1
-NumOfFileToLoad = 200
+NumOfFileToLoad = 800
 LogFileName = "../log_test.txt"
 ResultFileName = "../result_file.txt"
 UpdateAllLogsToFile = 1

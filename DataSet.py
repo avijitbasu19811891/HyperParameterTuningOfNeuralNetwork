@@ -100,8 +100,13 @@ def FormatData(data, labels):
                    index_label='Time Instance',
                    header=headerInfo)
 
-    dataSet.hist(column=['CPU load', 'Memory:', 'I/O:', 'VM_LOAD_LEVEL:' ])
-    plt.savefig("../Graphs/TrainingData_hist.png")
+    fig = plt.figure(figsize=(12, 7))
+    ax1 = fig.add_subplot(121)
+
+    ax1.set_title('with log scale')
+    dataSet.hist(column=['CPU load', 'Memory:', 'I/O:', 'Params5:','VM_LOAD_LEVEL:'], ax=ax1, bins=4)
+    ax1.set_yscale('log')
+    fig.savefig("../Graphs/TrainingData_hist.png", dpi=240)
     plt.close()
 
     correlations = dataSet.corr()
@@ -118,6 +123,13 @@ def FormatData(data, labels):
     ax.set_xticklabels(headerInfo)
     ax.set_yticklabels(headerInfo)
     plt.savefig("../Graphs/TrainingData_corr.png")
+    plt.close()
+
+    fig = plt.figure(figsize=(12, 7))
+    ax1 = fig.add_subplot(121)
+    dataSet.plot(kind='density', subplots=True, layout=(4, 3), sharex=False, ax=ax1)
+    plt.savefig("../Graphs/TrainingData_density.png")
+    plt.close()
 
 
 def load_data():
@@ -150,7 +162,6 @@ def load_data():
         data, labels = removeOutlier(data, labels)
 
     data = np.array(data)
-    #labels = TuneLabels(labels)
     labels = np.array(labels)
 
     FormatData(data, labels)

@@ -55,8 +55,13 @@ def dataDescription(data, labels):
     dataset = pd.DataFrame({'CPU load': data[:, 0],
                             'Memory:': data[:, 1],
                             'I/O:': data[:, 2],
-                            'Network:': data[:,3],
-                            'Label:': labels,
+                            'Network:': data[:, 3],
+                            'Params1:': data[:,4],
+                            'Params2:' : data[:,5],
+                            'Params3:' : data[:,6],
+                            'Params4:' : data[:,7],
+                            'Params5:' : data[:,8],
+                            'VM_LOAD_LEVEL:': labels,
                             'descr:': descr})
 
     print(dataset)
@@ -68,7 +73,10 @@ def UpdatePredictionResult(data, predLabels, labels=None):
 
     fname = PredictResultPath + "VmHost_Analyzer.csv"
 
-    dataSet.to_csv(fname, index = None,mode='a', header=['CPU load', 'Memory:', 'I/O:', 'Network', 'Label:','descr:'])
+    dataSet.to_csv(fname, index = None,mode='a', header=['CPU load', 'Memory:', 'I/O:', 'Network',
+                                                         'Params1:', 'Params2:','Params3:',
+                                                         'Params4:', 'Params5:',
+                                                         'VM_LOAD_LEVEL:', 'descr:'])
 
     """
     fname = PredictResultPath + "VmHost_Analyzer.txt"
